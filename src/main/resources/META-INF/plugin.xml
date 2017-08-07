@@ -1,0 +1,88 @@
+<idea-plugin>
+    <id>de.misi.idea.plugins.junit5helper</id>
+    <name>JUnit5Helper</name>
+    <version>0.1</version>
+    <vendor email="misi1967@yahoo.de" url="">Michael Siepmann</vendor>
+
+    <description><![CDATA[
+This plugin helps you writing JUnit5-Tests. You can:
+<ul>
+    <li>Add or remove the Disabled-annotation to a method or class</li>
+    <li>Add the DisplayName-annotation to a method</li>
+    <li>Surround a sequence of assert-Statements with assertAll</li>
+    <li>Surround a method with a nested-testclass</li>
+</ul>
+
+It has also some live-templates for
+<ul>
+    <li>A simple testmethod</li>
+    <li>A nested testclass</li>
+    <li>A parameterized test-method</li>
+</ul>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    <ul>
+        <li><em>0.1</em>: Initial Release</li>
+
+    </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="171"/>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <resource-bundle>de.misi.idea.plugins.resources.messages</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisabledIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>AddDisabledIntention</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisplayNameIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>AddDisplayNameIntention</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.RemoveDisabledFromClassIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>RemoveDisabledFromClassIntention</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.RemoveDisabledFromMethodIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>RemoveDisabledFromMethodIntention</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.SurroundWithAssertAllIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>SurroundWithAssertAllIntention</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.SurroundWithNestedClassIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>SurroundWithNestedClassIntention</descriptionDirectoryName>
+        </intentionAction>
+        <defaultLiveTemplatesProvider implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5TemplateProvider"/>
+        <liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/>
+        <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>
+    </extensions>
+
+    <application-components>
+    </application-components>
+
+    <project-components>
+    </project-components>
+
+    <actions>
+    </actions>
+
+</idea-plugin>

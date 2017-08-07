@@ -1,0 +1,13 @@
+public class X {
+    @Nested
+    class x {
+        @Test
+        void f() {
+            String value = "Hello";
+            assertAll(
+              () -> assertEquals(5, value.length),
+              () -> assertEquals("H", value.charAt(0))
+            );
+        }
+    }
+}
