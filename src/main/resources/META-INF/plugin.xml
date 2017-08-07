@@ -42,12 +42,12 @@ It has also some live-templates for
 
     <extensions defaultExtensionNs="com.intellij">
         <intentionAction>
-            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisabledIntention</className>
+            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisabledToMethodIntention</className>
             <category>JUnit 5</category>
             <descriptionDirectoryName>AddDisabledIntention</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
-            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisplayNameIntention</className>
+            <className>de.misi.idea.plugins.junit5helper.intentions.AddDisplayNameToMethodIntention</className>
             <category>JUnit 5</category>
             <descriptionDirectoryName>AddDisplayNameIntention</descriptionDirectoryName>
         </intentionAction>

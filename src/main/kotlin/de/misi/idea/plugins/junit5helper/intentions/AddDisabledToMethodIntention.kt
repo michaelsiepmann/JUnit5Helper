@@ -1,6 +1,6 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-class AddDisabledIntention : AbstractAddAnnotationIntention(ADD_DISABLED) {
+class AddDisabledToMethodIntention : AbstractAddAnnotationToMethodIntention(ADD_DISABLED_TO_METHOD) {
 
     override fun getUnavailableAnnotation() = "@Disabled"
 

@@ -6,11 +6,13 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.util.PsiTreeUtil
 
-const val ADD_DISABLED = "Add @Disabled"
+const val ADD_DISABLED_TO_CLASS = "Add @Disabled to class"
+const val ADD_DISABLED_TO_METHOD = "Add @Disabled to method"
 const val ADD_DISPLAYNAME = "Add @DisplayName"
-const val REMOVE_DISABLED_FROM_METHOD = "Remove @Disabled from method"
 const val REMOVE_DISABLED_FROM_CLASS = "Remove @Disabled from class"
+const val REMOVE_DISABLED_FROM_METHOD = "Remove @Disabled from method"
 const val SURROUND_WITH_ASSERT_ALL_NAME = "Surround with AssertAll"
+
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
 fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory) {
