@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ParameterResolver
 
 class TestcaseRunnerParameterResolver : ParameterResolver {
 
-    override fun supportsParameter(parameterContext: ParameterContext?, extensionContext: ExtensionContext?) = parameterContext?.parameter?.type?.name == TestcaseRunner::class.java.name
+    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext) = parameterContext.isOfType(TestcaseRunner::class.java)
 
-    override fun resolveParameter(parameterContext: ParameterContext?, extensionContext: ExtensionContext?) = TestcaseRunner()
+    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext) = TestcaseRunner()
 }

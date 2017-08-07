@@ -10,7 +10,6 @@ class StresstestExtension : BeforeEachCallback, AfterEachCallback {
 
     override fun beforeEach(context: ExtensionContext?) {
         ApplicationInfoImpl.setInStressTest(true)
-        // turn off Disposer debugging for performance tests
         Disposer.setDebugMode(false)
     }
 

@@ -8,14 +8,14 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 
-class CodeInsightTestFixtureParameterResolver : ParameterResolver, AfterEachCallback {
+class CodeInsightTestFixtureWrapperParameterResolver : ParameterResolver, AfterEachCallback {
 
     private var fixture: CodeInsightTestFixture? = null
 
-    override fun supportsParameter(parameterContext: ParameterContext?, extensionContext: ExtensionContext?) = parameterContext?.parameter?.type?.name == CodeInsightTestFixtureWrapper::class.java.name
+    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext) = parameterContext.isOfType(CodeInsightTestFixtureWrapper::class.java)
 
-    override fun resolveParameter(parameterContext: ParameterContext?, extensionContext: ExtensionContext?): Any? {
-        val annotation = extensionContext?.requiredTestClass?.getAnnotation(FixtureTestcase::class.java)
+    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any? {
+        val annotation = extensionContext.getAnnotation(FixtureTestcase::class.java)
         if (annotation != null) {
             val testFixtureBuilder = IdeaTestFixtureFactory.getFixtureFactory().createFixtureBuilder(extensionContext.requiredTestMethod?.name ?: "unknown")
             fixture = JavaTestFixtureFactory.getFixtureFactory().createCodeInsightFixture(testFixtureBuilder.fixture)
