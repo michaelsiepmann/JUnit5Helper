@@ -11,9 +11,12 @@ import com.intellij.psi.PsiModifierList
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil.getChildrenOfType
 
-abstract class AbstractAddAnnotationIntention(val name: String) : PsiElementBaseIntentionAction(), IntentionAction {
+abstract class AbstractAddAnnotationToMethodIntention(private val name: String) : PsiElementBaseIntentionAction(), IntentionAction {
+
     override fun getFamilyName() = name
+
     override fun getText() = familyName
+
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
         val method = element.getParentOfType(PsiMethod::class.java)
         if (method != null) {
