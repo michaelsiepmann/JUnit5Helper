@@ -2,13 +2,12 @@ package de.misi.idea.plugins.junit5helper.intentions
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
+import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiCodeBlock
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiExpressionStatement
+import com.intellij.psi.*
 import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.util.PsiTreeUtil
 
 class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), IntentionAction {
     override fun getText() = familyName
@@ -18,19 +17,15 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
     override fun startInWriteAction() = true
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        val text = editor?.caretModel?.currentCaret?.selectedText
-        if (text?.trim()?.startsWith("assert") == true) {
-            return true
-        }
-        return element.hasParentOfType(PsiExpressionStatement::class.java)
+        return findStatements(editor?.caretModel?.currentCaret, element).isNotEmpty()
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         val factory = JavaPsiFacade.getInstance(project).elementFactory
-        val parent = element.getParentOfType(PsiExpressionStatement::class.java)
-        if (parent != null) {
-            val topParent = parent.parent as PsiCodeBlock
-            val (innerText, indices) = parseSelectedText(editor, parent, topParent)
+        val statements = findStatements(editor?.caretModel?.currentCaret, element)
+        if (statements.isNotEmpty()) {
+            val topParent = statements[0].parent as PsiCodeBlock
+            val (innerText, indices) = parseSelectedText(statements, topParent)
             var statement = factory.createStatementFromText("assertAll(\n$innerText\n);", null) as PsiExpressionStatement
             statement = CodeStyleManager.getInstance(project).reformat(statement) as PsiExpressionStatement
             topParent.statements[indices[0]].replace(statement)
@@ -40,32 +35,60 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
         }
     }
 
-    private fun parseSelectedText(editor: Editor?, parent: PsiExpressionStatement, topParent: PsiCodeBlock): Pair<String, List<Int>> {
-        val text = editor?.caretModel?.currentCaret?.selectedText
-        if (text != null && text.trim().startsWith("assert")) {
-            return Pair(
-                    text.split("\n")
-                            .map {
-                                it.trim().replace(Regex("(.*);"), "() -> $1")
-                            }
-                            .joinToString(",\n"),
-                    createIndices(text, topParent)
-            )
+    private fun findStatements(currentCaret: Caret?, element: PsiElement): List<PsiExpressionStatement> {
+        if (currentCaret != null && currentCaret.selectedText?.isNotBlank() ?: false) {
+            return currentCaret.collectStatements(element.containingFile)
         }
-        return Pair("() -> " + parent.text.replace(";", ""), listOf(topParent.statements.indexOf(parent)))
+        val statement = element.getParentOfType(PsiExpressionStatement::class.java)
+        return if (statement != null && statement.isAssertionCall()) {
+            listOf(statement)
+        } else {
+            emptyList()
+        }
     }
 
-    private fun createIndices(text: String, topParent: PsiCodeBlock): List<Int> {
-        val result = mutableListOf<Int>()
-        text.split("\n")
-                .forEach { line ->
-                    val element = topParent.statements.firstOrNull {
-                        it.text == line.trim()
-                    }
-                    if (element != null) {
-                        result.add(topParent.statements.indexOf(element))
-                    }
-                }
+    private fun parseSelectedText(statements: Collection<PsiExpressionStatement>, topParent: PsiCodeBlock): Pair<String, List<Int>> {
+        return Pair(
+                statements
+                        .map {
+                            it.text.replace(Regex("(.*);"), "() -> $1")
+                        }
+                        .joinToString(",\n"),
+                createIndices(statements, topParent)
+        )
+    }
+
+    private fun createIndices(statements: Collection<PsiExpressionStatement>, topParent: PsiCodeBlock): List<Int> {
+        return statements.map {
+            topParent.statements.indexOf(it)
+        }
+    }
+
+    private fun PsiExpressionStatement.isAssertionCall(): Boolean {
+        return this.text.trim().startsWith("assert")
+    }
+
+    private fun Caret.collectStatements(file: PsiFile): List<PsiExpressionStatement> {
+        var start = selectionStart
+        val end = selectionEnd
+        val result = mutableListOf<PsiExpressionStatement>()
+        while (start < end) {
+            val item = file.findElementAt(start)
+            val statement = findExpressionStatement(item)
+            if (statement == null || !statement.isAssertionCall()) {
+                return emptyList()
+            }
+            result.add(statement)
+            start += statement.textLength
+        }
         return result
+    }
+
+    private fun findExpressionStatement(item: PsiElement?): PsiExpressionStatement? {
+        val statement = item?.getParentOfType(PsiExpressionStatement::class.java)
+        if (statement != null || item !is PsiWhiteSpace) {
+            return statement
+        }
+        return PsiTreeUtil.getNextSiblingOfType(item, PsiExpressionStatement::class.java)
     }
 }
