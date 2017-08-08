@@ -74,21 +74,35 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
         val result = mutableListOf<PsiExpressionStatement>()
         while (start < end) {
             val item = file.findElementAt(start)
-            val statement = findExpressionStatement(item)
+            val (statement, size) = findExpressionStatement(item)
             if (statement == null || !statement.isAssertionCall()) {
                 return emptyList()
             }
             result.add(statement)
-            start += statement.textLength
+            start += size
         }
         return result
     }
 
-    private fun findExpressionStatement(item: PsiElement?): PsiExpressionStatement? {
+    private fun findExpressionStatement(item: PsiElement?): Pair<PsiExpressionStatement?, Int> {
         val statement = item?.getParentOfType(PsiExpressionStatement::class.java)
         if (statement != null || item !is PsiWhiteSpace) {
-            return statement
+            return Pair(statement, statement?.textLength ?: 0)
         }
-        return PsiTreeUtil.getNextSiblingOfType(item, PsiExpressionStatement::class.java)
+        val sibling = PsiTreeUtil.getNextSiblingOfType(item, PsiExpressionStatement::class.java)
+        return Pair(sibling, calculateSize(item, sibling))
+    }
+
+    private fun calculateSize(item: PsiWhiteSpace, sibling: PsiExpressionStatement?): Int {
+        if (sibling == null) {
+            return 0
+        }
+        var current: PsiElement = item
+        var result = item.textLength
+        while (current != sibling) {
+            current = current.nextSibling
+            result += current.textLength
+        }
+        return result
     }
 }
