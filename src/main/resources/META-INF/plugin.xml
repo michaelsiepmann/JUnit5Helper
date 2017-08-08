@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.misi.idea.plugins.junit5helper</id>
     <name>JUnit5Helper</name>
-    <version>0.1</version>
+    <version>0.2</version>
     <vendor email="misi1967@yahoo.de" url="">Michael Siepmann</vendor>
 
     <description><![CDATA[
@@ -24,7 +24,7 @@ It has also some live-templates for
     <change-notes><![CDATA[
     <ul>
         <li><em>0.1</em>: Initial Release</li>
-
+        <li><em>0.2</em>: Bugfix: surround with assertAll work, when multiple lines are selected</li>
     </ul>
     ]]>
     </change-notes>
