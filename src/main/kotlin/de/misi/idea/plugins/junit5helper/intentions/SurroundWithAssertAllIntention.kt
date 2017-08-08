@@ -16,27 +16,29 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
 
     override fun startInWriteAction() = true
 
-    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        return findStatements(editor?.caretModel?.currentCaret, element).isNotEmpty()
-    }
+    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement) =
+            findStatements(editor?.caretModel?.currentCaret, element).isNotEmpty()
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         val factory = JavaPsiFacade.getInstance(project).elementFactory
         val statements = findStatements(editor?.caretModel?.currentCaret, element)
         if (statements.isNotEmpty()) {
             val topParent = statements[0].parent as PsiCodeBlock
-            val (innerText, indices) = parseSelectedText(statements, topParent)
+            val innerText = parseSelectedText(statements)
             var statement = factory.createStatementFromText("assertAll(\n$innerText\n);", null) as PsiExpressionStatement
             statement = CodeStyleManager.getInstance(project).reformat(statement) as PsiExpressionStatement
-            topParent.statements[indices[0]].replace(statement)
-            indices.drop(1).forEach {
-                topParent.statements[it].delete()
+            topParent.statements[topParent.statements.indexOf(statements[0])].replace(statement)
+            statements.forEach {
+                val index = topParent.statements.indexOf(it)
+                if (index >= 0) {
+                    topParent.statements[index].delete()
+                }
             }
         }
     }
 
     private fun findStatements(currentCaret: Caret?, element: PsiElement): List<PsiExpressionStatement> {
-        if (currentCaret != null && currentCaret.selectedText?.isNotBlank() ?: false) {
+        if (currentCaret != null && currentCaret.selectedText?.isNotBlank() == true) {
             return currentCaret.collectStatements(element.containingFile)
         }
         val statement = element.getParentOfType(PsiExpressionStatement::class.java)
@@ -47,26 +49,12 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
         }
     }
 
-    private fun parseSelectedText(statements: Collection<PsiExpressionStatement>, topParent: PsiCodeBlock): Pair<String, List<Int>> {
-        return Pair(
-                statements
-                        .map {
-                            it.text.replace(Regex("(.*);"), "() -> $1")
-                        }
-                        .joinToString(",\n"),
-                createIndices(statements, topParent)
-        )
-    }
+    private fun parseSelectedText(statements: Collection<PsiExpressionStatement>) =
+            statements.joinToString(",\n") {
+                it.text.replace(Regex("^(.*);$"), "() -> $1")
+            }
 
-    private fun createIndices(statements: Collection<PsiExpressionStatement>, topParent: PsiCodeBlock): List<Int> {
-        return statements.map {
-            topParent.statements.indexOf(it)
-        }
-    }
-
-    private fun PsiExpressionStatement.isAssertionCall(): Boolean {
-        return this.text.trim().startsWith("assert")
-    }
+    private fun PsiExpressionStatement.isAssertionCall() = text.trim().startsWith("assert")
 
     private fun Caret.collectStatements(file: PsiFile): List<PsiExpressionStatement> {
         var start = selectionStart
@@ -93,16 +81,10 @@ class SurroundWithAssertAllIntention : PsiElementBaseIntentionAction(), Intentio
         return Pair(sibling, calculateSize(item, sibling))
     }
 
-    private fun calculateSize(item: PsiWhiteSpace, sibling: PsiExpressionStatement?): Int {
-        if (sibling == null) {
-            return 0
-        }
-        var current: PsiElement = item
-        var result = item.textLength
-        while (current != sibling) {
-            current = current.nextSibling
-            result += current.textLength
-        }
-        return result
-    }
+    private fun calculateSize(item: PsiElement?, sibling: PsiElement?): Int =
+            when {
+                item == null -> 0
+                sibling == null || sibling == item -> item.textLength
+                else -> item.textLength + calculateSize(item.nextSibling, sibling)
+            }
 }
