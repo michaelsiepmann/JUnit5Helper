@@ -24,6 +24,8 @@ fun PsiClass.addImportStatement(factory: PsiElementFactory, importClass: String,
             ?.addImportStatement(factory, importClass, project)
 }
 
+fun <T : PsiElement> PsiElement.getChildOfType(clazz: Class<T>) = PsiTreeUtil.getChildOfType(this, clazz)
+
 fun <T : PsiElement> PsiElement.getParentOfType(aClass: Class<T>) = PsiTreeUtil.getParentOfType(this, aClass)
 
 fun <T : PsiElement> PsiElement.hasParentOfType(aClass: Class<T>) = getParentOfType(aClass) != null

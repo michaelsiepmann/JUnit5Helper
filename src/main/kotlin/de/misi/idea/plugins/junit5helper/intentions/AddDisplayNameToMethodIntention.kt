@@ -1,8 +1,11 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-class AddDisplayNameToMethodIntention : AbstractAddAnnotationToMethodIntention(ADD_DISPLAYNAME) {
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifierList
 
-    override fun getUnavailableAnnotation() = "@DisplayName"
+class AddDisplayNameToMethodIntention : AbstractAddAnnotationIntention("DisplayName", ADD_DISPLAYNAME) {
 
-    override fun getCreateableAnnotation() = "@DisplayName(\"\")"
+    override fun modifierList(element: PsiElement) =
+            element.getParentOfType(PsiMethod::class.java)?.getChildOfType(PsiModifierList::class.java)
 }

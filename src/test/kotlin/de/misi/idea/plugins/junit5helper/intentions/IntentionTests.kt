@@ -29,7 +29,7 @@ internal class IntentionTests {
             createDynamicTests(testcaseRunner, fixture, "removedisabledclass", REMOVE_DISABLED_FROM_CLASS)
 
     @TestFactory
-    @DisplayName("Test for remove @Disabled from method")
+    @DisplayName("Tests for remove @Disabled from method")
     fun executeRemoveDisabledFromMethodTests(testcaseRunner: TestcaseRunner, fixture: CodeInsightTestFixtureWrapper) =
             createDynamicTests(testcaseRunner, fixture, "removedisabledmethod", REMOVE_DISABLED_FROM_METHOD)
 
