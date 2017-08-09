@@ -15,6 +15,14 @@ const val SURROUND_WITH_ASSERT_ALL_NAME = "Surround with AssertAll"
 
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
+fun modifierListFromParentClass(element: PsiElement) =
+        element.getParentOfType(PsiClass::class.java)
+                ?.modifierList
+
+fun modifierListFromParentMethod(element: PsiElement) =
+        element.getParentOfType(PsiMethod::class.java)
+                ?.modifierList
+
 fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory) {
     modifierList?.add(factory.createAnnotationFromText(annotation, null))
 }
