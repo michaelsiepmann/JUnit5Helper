@@ -32,23 +32,21 @@ fun PsiClass.addImportStatement(factory: PsiElementFactory, importClass: String,
             ?.addImportStatement(factory, importClass, project)
 }
 
-fun <T : PsiElement> PsiElement.getChildOfType(clazz: Class<T>) = PsiTreeUtil.getChildOfType(this, clazz)
-
 fun <T : PsiElement> PsiElement.getParentOfType(aClass: Class<T>) = PsiTreeUtil.getParentOfType(this, aClass)
 
 fun <T : PsiElement> PsiElement.hasParentOfType(aClass: Class<T>) = getParentOfType(aClass) != null
 
 fun PsiJavaFile.addImportStatement(factory: PsiElementFactory, importClass: String, project: Project) {
     importList?.addImportStatement(factory, importClass, project)
+    CodeStyleManager.getInstance(project).reformat(importList!!)
 }
 
 fun PsiImportList.addImportStatement(factory: PsiElementFactory, importClass: String, project: Project) {
     val importStatement = findSingleImportStatement(importClass)
     if (importStatement == null) {
-        val newClazz = JavaPsiFacade.getInstance(project).findClass(importClass, ProjectScope.getLibrariesScope(project))
+        val newClazz = JavaPsiFacade.getInstance(project).findClass(importClass, ProjectScope.getAllScope(project))
         if (newClazz != null) {
             add(factory.createImportStatement(newClazz))
-            CodeStyleManager.getInstance(project).reformat(this)
         }
     }
 }

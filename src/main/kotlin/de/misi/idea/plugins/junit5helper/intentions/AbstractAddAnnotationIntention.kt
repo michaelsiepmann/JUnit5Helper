@@ -11,10 +11,12 @@ import com.intellij.psi.PsiModifierList
 import com.intellij.psi.codeStyle.CodeStyleManager
 
 abstract class AbstractAddAnnotationIntention(
-        private val annotation: String,
+        private val annotationClazz: String,
         private val name: String,
         private val modifierList: ((PsiElement) -> PsiModifierList?)
 ) : PsiElementBaseIntentionAction(), IntentionAction {
+
+    private val annotation = annotationClazz.substring(annotationClazz.lastIndexOf('.') + 1)
 
     override fun getFamilyName() = name
 
@@ -32,8 +34,9 @@ abstract class AbstractAddAnnotationIntention(
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         val method = element.getParentOfType(PsiMethod::class.java)
         if (method != null) {
-            val factory = JavaPsiFacade.getInstance(project).elementFactory
-            val annotation = factory.createAnnotationFromText("@${annotation}(\"\")", null)
+            val psiFacade = JavaPsiFacade.getInstance(project)
+            val factory = psiFacade.elementFactory
+            val annotation = factory.createAnnotationFromText("@$annotationClazz(\"\")", null)
             modifierList(element)?.add(annotation)
             CodeStyleManager.getInstance(project).reformat(method)
         }

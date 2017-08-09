@@ -1,3 +1,5 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-class AddDisabledToMethodIntention : AbstractAddAnnotationIntention("Disabled", ADD_DISABLED_TO_METHOD, ::modifierListFromParentMethod)
+import org.junit.jupiter.api.Disabled
+
+class AddDisabledToMethodIntention : AbstractAddAnnotationIntention(Disabled::class.java.canonicalName, ADD_DISABLED_TO_METHOD, ::modifierListFromParentMethod)
