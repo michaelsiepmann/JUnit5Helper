@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiModifierList
 
 abstract class AbstractRemoveAnnotationIntention(
-        private val annotation: String,
+        private val annotation: Class<*>,
         private val name: String,
         private val modifierList: ((PsiElement) -> PsiModifierList?)
 ) : PsiElementBaseIntentionAction(), IntentionAction {
@@ -18,9 +18,9 @@ abstract class AbstractRemoveAnnotationIntention(
     override fun getText() = familyName
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement) =
-            modifierList(element)?.hasAnnotationModifier(annotation) ?: false
+            modifierList(element)?.hasAnnotationModifier(annotation.simpleName) ?: false
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        modifierList(element)?.deleteAnnotation(annotation)
+        modifierList(element)?.deleteAnnotation(annotation.simpleName)
     }
 }
