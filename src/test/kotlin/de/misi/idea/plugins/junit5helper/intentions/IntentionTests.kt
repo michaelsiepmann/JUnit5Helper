@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.TestFactory
 import java.io.File
 
-private const val dataPath = "F:\\Daten\\IdeaProjects\\JUnit5Helper\\src\\test\\resources\\testData"
+private const val dataPath = ".\\src\\test\\resources\\testData"
 
 @FixtureTestcase(dataPath = dataPath, beforeSuffix = ".before.template.java", afterSuffix = ".after.template.java")
 internal class IntentionTests {
