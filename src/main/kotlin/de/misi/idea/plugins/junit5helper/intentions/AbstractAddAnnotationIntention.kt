@@ -11,7 +11,7 @@ import com.intellij.psi.PsiModifierList
 import com.intellij.psi.codeStyle.CodeStyleManager
 
 abstract class AbstractAddAnnotationIntention(
-        private val annotationClazz: Class<*>,
+        private val annotationClazz: String,
         private val name: String,
         private val modifierList: ((PsiElement) -> PsiModifierList?)
 ) : PsiElementBaseIntentionAction(), IntentionAction {
@@ -23,7 +23,7 @@ abstract class AbstractAddAnnotationIntention(
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
         val modifierList = modifierList(element)
         if (modifierList != null) {
-            return !modifierList.hasAnnotationModifier(annotationClazz.simpleName) &&
+            return !modifierList.hasAnnotationModifier(annotationClazz.getSimpleClassName()) &&
                     modifierList.hasTestAnnotation()
         }
         return false
@@ -34,7 +34,7 @@ abstract class AbstractAddAnnotationIntention(
         if (method != null) {
             val psiFacade = JavaPsiFacade.getInstance(project)
             val factory = psiFacade.elementFactory
-            val annotation = factory.createAnnotationFromText("@${annotationClazz.name}(\"\")", null)
+            val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
             modifierList(element)?.add(annotation)
             CodeStyleManager.getInstance(project).reformat(method)
         }
