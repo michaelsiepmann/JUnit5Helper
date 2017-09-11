@@ -6,17 +6,15 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil.getParentOfType
 import com.intellij.psi.util.PsiUtilCore.getLanguageAtOffset
+import de.misi.idea.plugins.junit5helper.isTestFile
 
 class JUnit5Context : TemplateContextType("JUNIT5", "JUnit 5") {
 
-    override fun isInContext(file: PsiFile, offset: Int): Boolean {
-        if (getLanguageAtOffset(file, offset).isKindOf(JavaLanguage.INSTANCE)) {
-            val clazz = getParentOfType(file.findElementAt(offset), PsiClass::class.java)
-            if (clazz != null) {
-                // todo: Testen, ob man im Test-Directory eines Moduls ist.
-                return true
+    override fun isInContext(file: PsiFile, offset: Int) =
+            when {
+                getLanguageAtOffset(file, offset).isKindOf(JavaLanguage.INSTANCE) ->
+                    getParentOfType(file.findElementAt(offset), PsiClass::class.java)?.isTestFile() ?: false
+                else ->
+                    false
             }
-        }
-        return false
-    }
 }

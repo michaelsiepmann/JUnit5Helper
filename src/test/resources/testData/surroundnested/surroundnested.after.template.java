@@ -6,8 +6,8 @@ class X {
         assertEquals(2, 1 + 1);
     }
 
-    @Nested
-    @DisplayName("")
+    @org.junit.jupiter.api.Nested
+    @org.junit.jupiter.api.DisplayName("")
     class FuncTest {
         @Test
         void func() {

@@ -1,7 +1,11 @@
 package de.misi.idea.junit5.extensions
 
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager.getSettings
+import com.intellij.psi.codeStyle.JavaCodeStyleSettings
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder
-import com.intellij.testFramework.fixtures.*
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture
+import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory
+import com.intellij.testFramework.fixtures.JavaTestFixtureFactory
 import de.misi.idea.junit5.annotations.FixtureTestcase
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -23,6 +27,13 @@ class CodeInsightTestFixtureWrapperParameterResolver : ParameterResolver, AfterE
                 builder.addContentRoot(tempDirPath).addSourceRoot("")
                 builder.setMockJdkLevel(JavaModuleFixtureBuilder.MockJdkLevel.jdk15)
                 setUp()
+                with(getSettings(project)) {
+                    USE_FQ_CLASS_NAMES = true
+                    USE_SINGLE_CLASS_IMPORTS = true
+                    with(getCustomSettings(JavaCodeStyleSettings::class.java)) {
+                        CLASS_NAMES_IN_JAVADOC = JavaCodeStyleSettings.FULLY_QUALIFY_NAMES_ALWAYS
+                    }
+                }
             }
             extensionContext.store.put(STORE_KEY, fixture)
             return CodeInsightTestFixtureWrapper(fixture!!, annotation.beforeSuffix, annotation.afterSuffix)

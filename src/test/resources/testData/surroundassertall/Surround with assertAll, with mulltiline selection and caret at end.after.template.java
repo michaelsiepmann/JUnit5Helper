@@ -16,7 +16,7 @@ class X {
         List<Getter> orderedGetters = new ArrayList<>(getters);
         orderedGetters.sort(new GetterComparator());
 
-        assertAll(
+        org.junit.jupiter.api.Assertions.assertAll(
                 () -> assertTrue((Boolean) orderedGetters.get(0).invoke()),
                 () -> assertEquals(EXPECTED_LOWER_VALUE, orderedGetters.get(1).invoke()),
                 () -> assertEquals("DummyModel.getDummyString", orderedGetters.get(2).invoke())

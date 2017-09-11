@@ -4,7 +4,7 @@ class X {
     @Test
     void f() {
         String value = "Hello";
-        assertAll(
+        org.junit.jupiter.api.Assertions.assertAll(
                 () -> assertEquals(5,
                         value.length),
                 () -> assertEquals("H",

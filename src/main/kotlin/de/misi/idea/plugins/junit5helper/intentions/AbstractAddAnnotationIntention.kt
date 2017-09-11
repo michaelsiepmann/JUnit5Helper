@@ -8,7 +8,7 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifierList
-import com.intellij.psi.codeStyle.CodeStyleManager
+import de.misi.idea.plugins.junit5helper.surround.shortenAndReformat
 
 abstract class AbstractAddAnnotationIntention(
         private val annotationClazz: String,
@@ -36,7 +36,7 @@ abstract class AbstractAddAnnotationIntention(
             val factory = psiFacade.elementFactory
             val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
             modifierList(element)?.add(annotation)
-            CodeStyleManager.getInstance(project).reformat(method)
+            project.shortenAndReformat(method)
         }
     }
 }

@@ -1,9 +1,11 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-import com.intellij.openapi.project.Project
-import com.intellij.psi.*
-import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.search.ProjectScope
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifierList
+import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
 
 const val ADD_DISABLED_TO_CLASS = "Add @Disabled to class"
@@ -25,33 +27,15 @@ internal fun modifierListFromParentMethod(element: PsiElement) =
 
 internal fun String.getSimpleClassName() = substring(lastIndexOf('.') + 1)
 
-internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory) {
-    modifierList?.add(factory.createAnnotationFromText(annotation, null))
-}
-
-internal fun PsiClass.addImportStatement(factory: PsiElementFactory, importClass: String, project: Project) {
-    getParentOfType(PsiJavaFile::class.java)
-            ?.addImportStatement(factory, importClass, project)
+internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
+    val psiAnnotation = factory.createAnnotationFromText(annotation, context)
+    modifierList?.add(psiAnnotation)
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
 }
 
 internal fun <T : PsiElement> PsiElement.getParentOfType(aClass: Class<T>) = PsiTreeUtil.getParentOfType(this, aClass)
 
 internal fun <T : PsiElement> PsiElement.hasParentOfType(aClass: Class<T>) = getParentOfType(aClass) != null
-
-internal fun PsiJavaFile.addImportStatement(factory: PsiElementFactory, importClass: String, project: Project) {
-    importList?.addImportStatement(factory, importClass, project)
-    CodeStyleManager.getInstance(project).reformat(importList!!)
-}
-
-internal fun PsiImportList.addImportStatement(factory: PsiElementFactory, importClass: String, project: Project) {
-    val importStatement = findSingleImportStatement(importClass)
-    if (importStatement == null) {
-        val newClazz = JavaPsiFacade.getInstance(project).findClass(importClass, ProjectScope.getAllScope(project))
-        if (newClazz != null) {
-            add(factory.createImportStatement(newClazz))
-        }
-    }
-}
 
 internal fun PsiModifierList.deleteAnnotation(name: String) {
     findAnnotation(name)?.delete()
