@@ -14,6 +14,7 @@ const val ADD_DISPLAYNAME = "Add @DisplayName"
 const val REMOVE_DISABLED_FROM_CLASS = "Remove @Disabled from class"
 const val REMOVE_DISABLED_FROM_METHOD = "Remove @Disabled from method"
 const val SURROUND_WITH_ASSERT_ALL_NAME = "Surround with AssertAll"
+const val CHANGE_TO_PARAMETERIZED_TEST = "Change to @ParameterizedTest"
 
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
@@ -30,6 +31,12 @@ internal fun String.getSimpleClassName() = substring(lastIndexOf('.') + 1)
 internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
     val psiAnnotation = factory.createAnnotationFromText(annotation, context)
     modifierList?.add(psiAnnotation)
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
+}
+
+internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
+    val psiAnnotation = factory.createAnnotationFromText(annotation, context)
+    add(psiAnnotation)
     JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
 }
 

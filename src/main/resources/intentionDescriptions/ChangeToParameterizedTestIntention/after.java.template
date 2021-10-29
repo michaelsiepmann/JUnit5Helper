@@ -1,0 +1,8 @@
+public class X {
+  @ParameterizedTest
+  void f() {
+    String value = "Hello";
+    assertEquals(5, value.length);
+    assertEquals("H", value.charAt(0));
+  }
+}
