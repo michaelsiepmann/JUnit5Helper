@@ -13,9 +13,9 @@ import java.util.regex.Pattern
 
 internal fun String.removeAccents(): String = Pattern.compile("\\p{InCombiningDiacriticalMarks}+").matcher(Normalizer.normalize(this, Normalizer.Form.NFD)).replaceAll("")
 
-internal fun String.upperFirstChar(): String = convertFirstChar(this, String::toUpperCase)
+internal fun String.upperFirstChar(): String = convertFirstChar(this, String::uppercase)
 
-internal fun String.lowerFirstChar(): String = convertFirstChar(this, String::toLowerCase)
+internal fun String.lowerFirstChar(): String = convertFirstChar(this, String::lowercase)
 
 private fun convertFirstChar(text: String, converter: (String.() -> String)): String {
     if (text.isEmpty()) {

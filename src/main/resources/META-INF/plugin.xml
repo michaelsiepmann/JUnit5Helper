@@ -73,7 +73,7 @@ It has also some live-templates for
             <category>JUnit 5</category>
             <descriptionDirectoryName>SurroundWithNestedClassIntention</descriptionDirectoryName>
         </intentionAction>
-        <defaultLiveTemplatesProvider implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5TemplateProvider"/>
+        <defaultLiveTemplates file="/liveTemplates/JUnit5.xml"/>
         <liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/>
         <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>
     </extensions>

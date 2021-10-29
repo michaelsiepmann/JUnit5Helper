@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JUnit5Helper.iml" filepath="$PROJECT_DIR$/JUnit5Helper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JUnit5Helper_main.iml" filepath="$PROJECT_DIR$/.idea/modules/JUnit5Helper_main.iml" group="JUnit5Helper" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JUnit5Helper_test.iml" filepath="$PROJECT_DIR$/.idea/modules/JUnit5Helper_test.iml" group="JUnit5Helper" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JUnit5Helper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/JUnit5Helper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JUnit5Helper.test.iml" filepath="$PROJECT_DIR$/.idea/modules/JUnit5Helper.test.iml" />
     </modules>
   </component>
 </project>

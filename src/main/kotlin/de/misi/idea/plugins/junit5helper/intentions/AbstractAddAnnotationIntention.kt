@@ -21,22 +21,17 @@ abstract class AbstractAddAnnotationIntention(
     override fun getText() = familyName
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        val modifierList = modifierList(element)
-        if (modifierList != null) {
-            return !modifierList.hasAnnotationModifier(annotationClazz.getSimpleClassName()) &&
-                    modifierList.hasTestAnnotation()
-        }
-        return false
+        val modifierList = modifierList(element) ?: return false
+        return !modifierList.hasAnnotationModifier(annotationClazz.getSimpleClassName()) &&
+                modifierList.hasTestAnnotation()
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        val method = element.getParentOfType(PsiMethod::class.java)
-        if (method != null) {
-            val psiFacade = JavaPsiFacade.getInstance(project)
-            val factory = psiFacade.elementFactory
-            val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
-            modifierList(element)?.add(annotation)
-            project.shortenAndReformat(method)
-        }
+        val method = element.getParentOfType(PsiMethod::class.java) ?: return
+        val psiFacade = JavaPsiFacade.getInstance(project)
+        val factory = psiFacade.elementFactory
+        val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
+        modifierList(element)?.add(annotation)
+        project.shortenAndReformat(method)
     }
 }

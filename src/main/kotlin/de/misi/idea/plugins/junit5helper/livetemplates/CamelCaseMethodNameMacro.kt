@@ -20,21 +20,20 @@ class CamelCaseMethodNameMacro : MacroBase("camelCaseMethodName", "Converts a st
     private fun convertTextToMethodName(text: String): String {
         var markUpper = false
         return text.toCharArray()
-                .map {
-                    if (it.isLetterOrDigit()) {
-                        if (markUpper) {
-                            markUpper = false
-                            it.toUpperCase().toString()
-                        } else {
-                            it.toString()
-                        }
+            .joinToString("") {
+                if (it.isLetterOrDigit()) {
+                    if (markUpper) {
+                        markUpper = false
+                        it.uppercaseChar().toString()
                     } else {
-                        markUpper = true
-                        ""
+                        it.toString()
                     }
+                } else {
+                    markUpper = true
+                    ""
                 }
-                .joinToString("")
-                .removeAccents()
-                .lowerFirstChar()
+            }
+            .removeAccents()
+            .lowerFirstChar()
     }
 }
