@@ -1,4 +1,3 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-class RemoveDisplayNameFromMethodInjection : AbstractRemoveAnnotationIntention(ANNOTATION_DISPLAY_NAME, "Remove DisplayName from method", ::modifierListFromParentMethod) {
-}
+class RemoveDisplayNameFromMethodInjection : AbstractRemoveAnnotationIntention(ANNOTATION_DISPLAY_NAME, REMOVE_DISPLAY_NAME_FROM_METHOD, ::modifierListFromParentMethod)
