@@ -64,6 +64,11 @@ It has also some live-templates for
             <descriptionDirectoryName>RemoveDisabledFromMethodIntention</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.RemoveDisplayNameFromMethodInjection</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>RemoveDisplayNameFromMethodInjection</descriptionDirectoryName>
+        </intentionAction>
+        <intentionAction>
             <className>de.misi.idea.plugins.junit5helper.intentions.SurroundWithAssertAllIntention</className>
             <category>JUnit 5</category>
             <descriptionDirectoryName>SurroundWithAssertAllIntention</descriptionDirectoryName>
