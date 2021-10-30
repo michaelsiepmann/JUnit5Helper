@@ -25,12 +25,12 @@ const val ANNOTATION_METHOD_SOURCE = "org.junit.jupiter.params.provider.MethodSo
 
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
-internal fun modifierListFromParentClass(element: PsiElement) =
-    element.getParentOfType(PsiClass::class.java)
+internal fun PsiElement.modifierListFromParentClass() =
+    getParentOfType(PsiClass::class.java)
         ?.modifierList
 
-internal fun modifierListFromParentMethod(element: PsiElement) =
-    element.getParentOfType(PsiMethod::class.java)
+internal fun PsiElement.modifierListFromParentMethod() =
+    getParentOfType(PsiMethod::class.java)
         ?.modifierList
 
 internal fun String.getSimpleClassName() = substring(lastIndexOf('.') + 1)

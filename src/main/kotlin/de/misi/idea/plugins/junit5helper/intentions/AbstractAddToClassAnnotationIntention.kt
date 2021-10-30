@@ -7,13 +7,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiModifierList
 import de.misi.idea.plugins.junit5helper.surround.shortenAndReformat
 
-abstract class AbstractAddAnnotationIntention(
-        private val annotationClazz: String,
-        private val name: String,
-        private val modifierList: ((PsiElement) -> PsiModifierList?)
+abstract class AbstractAddToClassAnnotationIntention(
+    private val annotationClazz: String,
+    private val name: String
 ) : PsiElementBaseIntentionAction(), IntentionAction {
 
     override fun getFamilyName() = name
@@ -21,9 +19,8 @@ abstract class AbstractAddAnnotationIntention(
     override fun getText() = familyName
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        val modifierList = modifierList(element) ?: return false
-        return !modifierList.hasAnnotationModifier(annotationClazz.getSimpleClassName()) &&
-                modifierList.hasTestAnnotation()
+        val modifierList = element.modifierListFromParentClass() ?: return false
+        return !modifierList.hasAnnotationModifier(annotationClazz.getSimpleClassName())
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
@@ -31,7 +28,7 @@ abstract class AbstractAddAnnotationIntention(
         val psiFacade = JavaPsiFacade.getInstance(project)
         val factory = psiFacade.elementFactory
         val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
-        modifierList(element)?.add(annotation)
+        element.modifierListFromParentClass()?.add(annotation)
         project.shortenAndReformat(method)
     }
 }

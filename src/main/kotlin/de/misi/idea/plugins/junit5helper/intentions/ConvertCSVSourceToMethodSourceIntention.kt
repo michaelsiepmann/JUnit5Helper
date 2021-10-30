@@ -19,12 +19,12 @@ class ConvertCSVSourceToMethodSourceIntention : PsiElementBaseIntentionAction(),
     override fun getFamilyName() = CHANGE_TO_METHOD_SOURCE
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        return modifierListFromParentMethod(element)?.hasAnnotationModifier(ANNOTATION_CSV_SOURCE)
+        return element.modifierListFromParentMethod()?.hasAnnotationModifier(ANNOTATION_CSV_SOURCE)
             ?: false
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        modifierListFromParentMethod(element)?.let { modifierList ->
+        element.modifierListFromParentMethod()?.let { modifierList ->
             val csvParser = CSVParser()
             val lines = modifierList.findAnnotation(ANNOTATION_CSV_SOURCE)
                 ?.findAttributeValue("value")

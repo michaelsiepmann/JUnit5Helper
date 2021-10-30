@@ -5,12 +5,10 @@ import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiModifierList
 
-abstract class AbstractRemoveAnnotationIntention(
-        private val annotation: String,
-        private val name: String,
-        private val modifierList: ((PsiElement) -> PsiModifierList?)
+abstract class AbstractRemoveFromClassAnnotationIntention(
+    private val annotation: String,
+    private val name: String
 ) : PsiElementBaseIntentionAction(), IntentionAction {
 
     override fun getFamilyName() = name
@@ -18,9 +16,9 @@ abstract class AbstractRemoveAnnotationIntention(
     override fun getText() = familyName
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement) =
-            modifierList(element)?.hasAnnotationModifier(annotation.getSimpleClassName()) ?: false
+        element.modifierListFromParentClass()?.hasAnnotationModifier(annotation.getSimpleClassName()) ?: false
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        modifierList(element)?.deleteAnnotation(annotation.getSimpleClassName())
+        element.modifierListFromParentClass()?.deleteAnnotation(annotation.getSimpleClassName())
     }
 }

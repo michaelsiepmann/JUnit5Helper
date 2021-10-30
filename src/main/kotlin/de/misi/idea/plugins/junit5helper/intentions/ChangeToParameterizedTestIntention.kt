@@ -16,10 +16,10 @@ class ChangeToParameterizedTestIntention : PsiElementBaseIntentionAction(), Inte
     override fun getFamilyName() = CHANGE_TO_PARAMETERIZED_TEST
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement) =
-        modifierListFromParentMethod(element)?.hasAnnotationModifier("org.junit.jupiter.api.Test") ?: false
+        element.modifierListFromParentMethod()?.hasAnnotationModifier("org.junit.jupiter.api.Test") ?: false
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        modifierListFromParentMethod(element)?.let {
+        element.modifierListFromParentMethod()?.let {
             val factory = PsiElementFactory.getInstance(project)
             val clazz = element.parentOfType<PsiClass>() ?: return
             it.addAnnotation("@org.junit.jupiter.params.ParameterizedTest(name=\"\")", factory, clazz)
