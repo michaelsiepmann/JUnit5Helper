@@ -100,8 +100,8 @@ internal fun surroundWithNestedClass(element: PsiElement, project: Project) {
         if (parentClazz != null) {
             val factory = JavaPsiFacade.getInstance(project).elementFactory
             val clazz = factory.createClass(method.name.upperFirstChar() + "Test")
-            clazz.addAnnotation("@org.junit.jupiter.api.Nested", factory, clazz)
-            clazz.addAnnotation("@org.junit.jupiter.api.DisplayName(\"\")", factory, clazz)
+            clazz.addAnnotation("org.junit.jupiter.api.Nested", factory, clazz)
+            clazz.addAnnotation("org.junit.jupiter.api.DisplayName(\"\")", factory, clazz)
             clazz.modifierList?.setModifierProperty("public", false)
             clazz.add(method)
             val index = parentClazz.children.indexOf(method)

@@ -15,27 +15,40 @@ const val REMOVE_DISABLED_FROM_CLASS = "Remove @Disabled from class"
 const val REMOVE_DISABLED_FROM_METHOD = "Remove @Disabled from method"
 const val SURROUND_WITH_ASSERT_ALL_NAME = "Surround with AssertAll"
 const val CHANGE_TO_PARAMETERIZED_TEST = "Change to @ParameterizedTest"
+const val CHANGE_TO_METHOD_SOURCE = "Change to @MethodSource"
+
+const val ANNOTATION_DISABLED = "org.junit.jupiter.api.Disabled"
+const val ANNOTATION_DISPLAY_NAME = "org.junit.jupiter.api.DisplayName"
+const val ANNOTATION_CSV_SOURCE = "org.junit.jupiter.params.provider.CsvSource"
+const val ANNOTATION_METHOD_SOURCE = "org.junit.jupiter.params.provider.MethodSource"
 
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
 internal fun modifierListFromParentClass(element: PsiElement) =
-        element.getParentOfType(PsiClass::class.java)
-                ?.modifierList
+    element.getParentOfType(PsiClass::class.java)
+        ?.modifierList
 
 internal fun modifierListFromParentMethod(element: PsiElement) =
-        element.getParentOfType(PsiMethod::class.java)
-                ?.modifierList
+    element.getParentOfType(PsiMethod::class.java)
+        ?.modifierList
 
 internal fun String.getSimpleClassName() = substring(lastIndexOf('.') + 1)
 
+internal fun String.prependIfMissing(prefix: String) =
+    if (startsWith(prefix)) {
+        this
+    } else {
+        prefix + this
+    }
+
 internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
-    val psiAnnotation = factory.createAnnotationFromText(annotation, context)
+    val psiAnnotation = factory.createAnnotationFromText(annotation.prependIfMissing("@"), context)
     modifierList?.add(psiAnnotation)
     JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
 }
 
 internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
-    val psiAnnotation = factory.createAnnotationFromText(annotation, context)
+    val psiAnnotation = factory.createAnnotationFromText(annotation.prependIfMissing("@"), context)
     add(psiAnnotation)
     JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
 }
@@ -48,6 +61,7 @@ internal fun PsiModifierList.deleteAnnotation(name: String) {
     findAnnotation(name)?.delete()
 }
 
-internal fun PsiModifierList.hasTestAnnotation() = hasAnnotationModifier("Test") || hasAnnotationModifier("ParameterizedTest")
+internal fun PsiModifierList.hasTestAnnotation() =
+    hasAnnotationModifier("Test") || hasAnnotationModifier("ParameterizedTest")
 
 internal fun PsiModifierList.hasAnnotationModifier(name: String) = findAnnotation(name) != null

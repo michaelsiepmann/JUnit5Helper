@@ -78,6 +78,11 @@ It has also some live-templates for
             <category>JUnit 5</category>
             <descriptionDirectoryName>ChangeToParameterizedTestIntention</descriptionDirectoryName>
         </intentionAction>
+        <intentionAction>
+            <className>de.misi.idea.plugins.junit5helper.intentions.ConvertCSVSourceToMethodSourceIntention</className>
+            <category>JUnit 5</category>
+            <descriptionDirectoryName>ConvertCSVSourceToMethodSourceIntention</descriptionDirectoryName>
+        </intentionAction>
         <defaultLiveTemplates file="/liveTemplates/JUnit5.xml"/>
         <liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/>
         <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>

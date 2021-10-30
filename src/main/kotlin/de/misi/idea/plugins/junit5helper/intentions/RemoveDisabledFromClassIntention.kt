@@ -1,3 +1,3 @@
 package de.misi.idea.plugins.junit5helper.intentions
 
-class RemoveDisabledFromClassIntention : AbstractRemoveAnnotationIntention("org.junit.jupiter.api.Disabled", REMOVE_DISABLED_FROM_CLASS, ::modifierListFromParentClass)
+class RemoveDisabledFromClassIntention : AbstractRemoveAnnotationIntention(ANNOTATION_DISABLED, REMOVE_DISABLED_FROM_CLASS, ::modifierListFromParentClass)
