@@ -74,16 +74,6 @@ It has also some live-templates for
             <descriptionDirectoryName>RemoveDisplayNameFromMethodInjection</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
-            <className>de.misi.idea.plugins.junit5helper.intentions.SurroundWithAssertAllIntention</className>
-            <category>JUnit 5</category>
-            <descriptionDirectoryName>SurroundWithAssertAllIntention</descriptionDirectoryName>
-        </intentionAction>
-        <intentionAction>
-            <className>de.misi.idea.plugins.junit5helper.intentions.SurroundWithNestedClassIntention</className>
-            <category>JUnit 5</category>
-            <descriptionDirectoryName>SurroundWithNestedClassIntention</descriptionDirectoryName>
-        </intentionAction>
-        <intentionAction>
             <className>de.misi.idea.plugins.junit5helper.intentions.ChangeToParameterizedTestIntention</className>
             <category>JUnit 5</category>
             <descriptionDirectoryName>ChangeToParameterizedTestIntention</descriptionDirectoryName>
@@ -96,6 +86,8 @@ It has also some live-templates for
         <defaultLiveTemplates file="/liveTemplates/JUnit5.xml"/>
         <liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/>
         <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>
+        <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.StatementSurroundDescriptor"/>
+        <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.MethodSurroundDescriptor"/>
     </extensions>
 
     <application-components>
@@ -103,8 +95,5 @@ It has also some live-templates for
 
     <project-components>
     </project-components>
-
-    <actions>
-    </actions>
 
 </idea-plugin>

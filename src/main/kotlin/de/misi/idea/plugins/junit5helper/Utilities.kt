@@ -6,12 +6,15 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ModuleRootModel
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
+import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import org.jetbrains.jps.model.java.JavaSourceRootType
 import java.text.Normalizer
 import java.util.regex.Pattern
 
-internal fun String.removeAccents(): String = Pattern.compile("\\p{InCombiningDiacriticalMarks}+").matcher(Normalizer.normalize(this, Normalizer.Form.NFD)).replaceAll("")
+internal fun String.removeAccents(): String =
+    Pattern.compile("\\p{InCombiningDiacriticalMarks}+").matcher(Normalizer.normalize(this, Normalizer.Form.NFD))
+        .replaceAll("")
 
 internal fun String.upperFirstChar(): String = convertFirstChar(this, String::uppercase)
 
@@ -28,21 +31,52 @@ private fun convertFirstChar(text: String, converter: (String.() -> String)): St
 }
 
 // todo: Testen, ob man im Test-Directory eines Moduls ist.
-internal fun PsiElement.isTestFile() = project.isInsideTestModule(containingFile)
+internal fun PsiElement.isTestFile() = project.isInsideTestModule()
 
-internal fun Project.isInsideTestModule(file: PsiFile) = ModuleManager.getInstance(this).isInsideTestModule(file)
+internal fun Project.isInsideTestModule() = ModuleManager.getInstance(this).isInsideTestModule()
 
-internal fun ModuleManager.isInsideTestModule(file: PsiFile) = modules.any {
-    it.isInsideTestModule(file)
+internal fun ModuleManager.isInsideTestModule() = modules.any {
+    it.isInsideTestModule()
 }
 
-internal fun Module.isInsideTestModule(file: PsiFile) = ModuleRootManager.getInstance(this).isInsideTestModule(file)
+internal fun Module.isInsideTestModule() = ModuleRootManager.getInstance(this).isInsideTestModule()
 
-internal fun ModuleRootModel.isInsideTestModule(file: PsiFile): Boolean {
+internal fun ModuleRootModel.isInsideTestModule(): Boolean {
     val contentEntry = contentEntries.find {
         it.sourceFolders.any {
             it.isTestSource
         }
     }
     return contentEntry?.sourceFolders?.first()?.rootType == JavaSourceRootType.TEST_SOURCE
+}
+
+internal fun <E> Collection<E>.between(start: E, end: E): Collection<E> {
+    var found = false
+    return this.mapNotNull {
+        var foundNext = true
+        if (!found) {
+            if (it == start) {
+                found = true
+            }
+            if (it == end) {
+                foundNext = false
+            }
+        } else {
+            if (it == end) {
+                foundNext = false
+            }
+        }
+        return@mapNotNull if (found) {
+            found = foundNext
+            it
+        } else {
+            null
+        }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+internal fun <T : PsiElement> Project.shortenAndReformat(statement: T): T {
+    val result = JavaCodeStyleManager.getInstance(this).shortenClassReferences(statement) as T
+    return CodeStyleManager.getInstance(this).reformat(result) as T
 }

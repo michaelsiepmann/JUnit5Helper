@@ -22,6 +22,8 @@ const val ANNOTATION_DISABLED = "org.junit.jupiter.api.Disabled"
 const val ANNOTATION_DISPLAY_NAME = "org.junit.jupiter.api.DisplayName"
 const val ANNOTATION_CSV_SOURCE = "org.junit.jupiter.params.provider.CsvSource"
 const val ANNOTATION_METHOD_SOURCE = "org.junit.jupiter.params.provider.MethodSource"
+const val ANNOTATION_PARAMETERIZED_TEST = "org.junit.jupiter.params.ParameterizedTest"
+const val ANNOTATION_TEST = "org.junit.jupiter.api.Test"
 
 const val SURROUND_WITH_NESTED_CLASS_NAME = "Surround with Nested-Class"
 
@@ -56,13 +58,11 @@ internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiEleme
 
 internal fun <T : PsiElement> PsiElement.getParentOfType(aClass: Class<T>) = PsiTreeUtil.getParentOfType(this, aClass)
 
-internal fun <T : PsiElement> PsiElement.hasParentOfType(aClass: Class<T>) = getParentOfType(aClass) != null
-
 internal fun PsiModifierList.deleteAnnotation(name: String) {
     findAnnotation(name)?.delete()
 }
 
 internal fun PsiModifierList.hasTestAnnotation() =
-    hasAnnotationModifier("Test") || hasAnnotationModifier("ParameterizedTest")
+    hasAnnotationModifier(ANNOTATION_TEST) || hasAnnotationModifier(ANNOTATION_PARAMETERIZED_TEST)
 
 internal fun PsiModifierList.hasAnnotationModifier(name: String) = findAnnotation(name) != null

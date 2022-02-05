@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
-import de.misi.idea.plugins.junit5helper.surround.shortenAndReformat
+import de.misi.idea.plugins.junit5helper.shortenAndReformat
 
 abstract class AbstractAddFromMethodAnnotationIntention(private val annotationClazz: String, name: String) :
     AbstractTestMethodAnnotation(name) {
