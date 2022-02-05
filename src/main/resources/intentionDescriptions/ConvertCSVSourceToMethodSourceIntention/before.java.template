@@ -1,0 +1,14 @@
+public class Testcase {
+
+    @ParameterizedTest
+    @CsvSource({
+            "'test1','test2',1",
+            "'test11','test12',2",
+            "'test21','test22',3",
+            "'test31','test32',4",
+            ",'sfsf',5"
+    })
+    void doTest(String value1, String value2, int value3) {
+
+    }
+}

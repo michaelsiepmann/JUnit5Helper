@@ -1,0 +1,18 @@
+public class Testcase {
+
+    @ParameterizedTest
+    <spot>@MethodSource("methodSourceForDoTest")</spot>
+    void doTest(String value1, String value2, int value3) {
+
+    }
+
+    <spot>private static Stream<Arguments> methodSourceForDoTest() {
+        return Stream.of(
+                Arguments.of("test1", "test2", 1),
+                Arguments.of("test11", "test12", 2),
+                Arguments.of("test21", "test22", 3),
+                Arguments.of("test31", "test32", 4),
+                Arguments.of(null, "sfsf", 5)
+        );
+    }</spot>
+}
