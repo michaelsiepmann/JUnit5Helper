@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.6.10'
     repositories {
         mavenCentral()
     }
@@ -21,14 +21,14 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 intellij {
-    version '2021.2.3'
+    version '2021.3.2'
     plugins 'java'
     updateSinceUntilBuild false
     pluginName 'JUnit5Helper'
 }
 
 group 'de.misi.idea.plugins.junit5helper'
-version '0.5'
+version '0.6'
 
 repositories {
     mavenCentral()
@@ -36,9 +36,9 @@ repositories {
 
 dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-params:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-params:5.8.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
