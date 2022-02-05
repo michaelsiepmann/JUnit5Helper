@@ -14,16 +14,7 @@ import de.misi.idea.plugins.junit5helper.shortenAndReformat
 class AssertAllSurrounder : Surrounder {
     override fun getTemplateDescription() = "assertAll"
 
-    override fun isApplicable(elements: Array<out PsiElement>): Boolean {
-        return elements.all { it.isAssertionCall() }
-    }
-
-    private fun PsiElement.isAssertionCall() =
-        getParentOfType(this, PsiExpressionStatement::class.java, false)
-            ?.isAssertionCall() ?: false
-
-    private fun PsiExpressionStatement.isAssertionCall() =
-        text.trim().startsWith("assert")
+    override fun isApplicable(elements: Array<out PsiElement>) = true
 
     override fun surroundElements(project: Project, editor: Editor, elements: Array<out PsiElement>): TextRange? {
         val factory = JavaPsiFacade.getInstance(project).elementFactory

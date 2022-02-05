@@ -51,26 +51,23 @@ internal fun ModuleRootModel.isInsideTestModule(): Boolean {
 }
 
 internal fun <E> Collection<E>.between(start: E, end: E): Collection<E> {
-    var found = false
+    var inside = false
     return this.mapNotNull {
-        var foundNext = true
-        if (!found) {
-            if (it == start) {
-                found = true
-            }
+        if (inside) {
             if (it == end) {
-                foundNext = false
+                inside = false
             }
-        } else {
-            if (it == end) {
-                foundNext = false
-            }
-        }
-        return@mapNotNull if (found) {
-            found = foundNext
             it
         } else {
-            null
+            if (it == start) {
+                inside = true
+                if (it == end) {
+                    inside = false
+                }
+                it
+            } else {
+                null
+            }
         }
     }
 }
