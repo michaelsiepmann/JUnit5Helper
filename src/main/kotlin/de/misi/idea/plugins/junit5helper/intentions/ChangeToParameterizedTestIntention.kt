@@ -8,6 +8,7 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.util.parentOfType
+import de.misi.idea.plugins.junit5helper.JUnit5WorkspaceConfiguration
 
 class ChangeToParameterizedTestIntention : PsiElementBaseIntentionAction(), IntentionAction {
 
@@ -20,9 +21,13 @@ class ChangeToParameterizedTestIntention : PsiElementBaseIntentionAction(), Inte
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         element.modifierListFromParentMethod()?.let {
+            val config = JUnit5WorkspaceConfiguration.getInstance(project)
             val factory = PsiElementFactory.getInstance(project)
             val clazz = element.parentOfType<PsiClass>() ?: return
             it.addAnnotation("$ANNOTATION_PARAMETERIZED_TEST(name=\"\")", factory, clazz)
+            if (config.addDisplayName == true) {
+                it.addAnnotation("$ANNOTATION_DISPLAY_NAME(\"\")", factory, clazz)
+            }
             it.addAnnotation("$ANNOTATION_CSV_SOURCE({\n\"\"\n})", factory, clazz)
             it.deleteAnnotation(ANNOTATION_TEST)
         }

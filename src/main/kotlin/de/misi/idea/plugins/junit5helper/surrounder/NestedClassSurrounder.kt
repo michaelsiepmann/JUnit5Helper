@@ -9,6 +9,9 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.util.parentOfType
+import de.misi.idea.plugins.junit5helper.JUnit5WorkspaceConfiguration
+import de.misi.idea.plugins.junit5helper.intentions.ANNOTATION_DISPLAY_NAME
+import de.misi.idea.plugins.junit5helper.intentions.ANNOTATION_NESTED
 import de.misi.idea.plugins.junit5helper.intentions.addAnnotation
 import de.misi.idea.plugins.junit5helper.shortenAndReformat
 import de.misi.idea.plugins.junit5helper.upperFirstChar
@@ -25,12 +28,15 @@ class NestedClassSurrounder : Surrounder {
         val method = firstElement.parentOfType<PsiMethod>(true) ?: return null
         val parentClazz = method.parentOfType<PsiClass>()
         if (parentClazz != null) {
+            val config = JUnit5WorkspaceConfiguration.getInstance(project)
             val factory = JavaPsiFacade.getInstance(project).elementFactory
             val clazzName = method.name.upperFirstChar() + "Test"
             val clazz = factory.createClassFromText("", firstElement)
             clazz.setName(clazzName)
-            clazz.addAnnotation("org.junit.jupiter.api.Nested", factory, clazz)
-            clazz.addAnnotation("org.junit.jupiter.api.DisplayName(\"\")", factory, clazz)
+            clazz.addAnnotation(ANNOTATION_NESTED, factory, clazz)
+            if (config.addDisplayName == true) {
+                clazz.addAnnotation("$ANNOTATION_DISPLAY_NAME(\"\")", factory, clazz)
+            }
             clazz.addRangeBefore(firstElement, elements[elements.size - 1], clazz.rBrace)
             val parentNode = firstElement.parent.node
             if (elements.size > 1) {

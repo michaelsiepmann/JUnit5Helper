@@ -21,6 +21,7 @@ const val ANNOTATION_DISABLED = "org.junit.jupiter.api.Disabled"
 const val ANNOTATION_DISPLAY_NAME = "org.junit.jupiter.api.DisplayName"
 const val ANNOTATION_CSV_SOURCE = "org.junit.jupiter.params.provider.CsvSource"
 const val ANNOTATION_METHOD_SOURCE = "org.junit.jupiter.params.provider.MethodSource"
+const val ANNOTATION_NESTED = "org.junit.jupiter.api.Nested"
 const val ANNOTATION_PARAMETERIZED_TEST = "org.junit.jupiter.params.ParameterizedTest"
 const val ANNOTATION_TEST = "org.junit.jupiter.api.Test"
 
@@ -44,13 +45,17 @@ private fun String.prependIfMissing(prefix: String) =
 internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
     val psiAnnotation = factory.createAnnotationFromText(annotation.prependAtSign(), context)
     modifierList?.add(psiAnnotation)
-    JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiAnnotation)
+    val codeStyleManager = JavaCodeStyleManager.getInstance(project)
+    codeStyleManager.shortenClassReferences(psiAnnotation)
+    codeStyleManager.shortenClassReferences(context)
 }
 
 internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
     val psiAnnotation = factory.createAnnotationFromText(annotation.prependAtSign(), context)
     add(psiAnnotation)
-    JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiAnnotation)
+    val codeStyleManager = JavaCodeStyleManager.getInstance(project)
+    codeStyleManager.shortenClassReferences(psiAnnotation)
+    codeStyleManager.shortenClassReferences(context)
 }
 
 internal fun PsiModifierList.deleteAnnotation(name: String) {

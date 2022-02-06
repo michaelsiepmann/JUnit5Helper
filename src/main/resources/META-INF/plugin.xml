@@ -88,6 +88,10 @@ It has also some live-templates for
         <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>
         <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.StatementSurroundDescriptor"/>
         <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.MethodSurroundDescriptor"/>
+
+        <projectService serviceImplementation="de.misi.idea.plugins.junit5helper.JUnit5WorkspaceConfiguration"/>
+        <projectConfigurable groupId="tools" groupWeight="110" dynamic="true" displayName="JUnit5 Helper" id="preferences.JUnit5" instance="de.misi.idea.plugins.junit5helper.JUnit5Configurable"/>
+
     </extensions>
 
     <application-components>
