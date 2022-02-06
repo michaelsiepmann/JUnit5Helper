@@ -50,7 +50,7 @@ internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFacto
 internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
     val psiAnnotation = factory.createAnnotationFromText(annotation.prependAtSign(), context)
     add(psiAnnotation)
-    JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiAnnotation)
 }
 
 internal fun PsiModifierList.deleteAnnotation(name: String) {
