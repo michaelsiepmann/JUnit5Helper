@@ -16,15 +16,15 @@ class ChangeToParameterizedTestIntention : PsiElementBaseIntentionAction(), Inte
     override fun getFamilyName() = CHANGE_TO_PARAMETERIZED_TEST
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement) =
-        element.modifierListFromParentMethod()?.hasAnnotationModifier("org.junit.jupiter.api.Test") ?: false
+        element.modifierListFromParentMethod()?.hasAnnotationModifier(ANNOTATION_TEST) ?: false
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         element.modifierListFromParentMethod()?.let {
             val factory = PsiElementFactory.getInstance(project)
             val clazz = element.parentOfType<PsiClass>() ?: return
-            it.addAnnotation("@org.junit.jupiter.params.ParameterizedTest(name=\"\")", factory, clazz)
-            it.addAnnotation("@org.junit.jupiter.params.provider.CsvSource({\n\"\"\n})", factory, clazz)
-            it.deleteAnnotation("org.junit.jupiter.api.Test")
+            it.addAnnotation("$ANNOTATION_PARAMETERIZED_TEST(name=\"\")", factory, clazz)
+            it.addAnnotation("$ANNOTATION_CSV_SOURCE({\n\"\"\n})", factory, clazz)
+            it.deleteAnnotation(ANNOTATION_TEST)
         }
     }
 }

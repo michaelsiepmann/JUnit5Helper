@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.util.parentOfType
 import de.misi.idea.plugins.junit5helper.shortenAndReformat
 
 abstract class AbstractAddToClassAnnotationIntention(
@@ -24,10 +25,10 @@ abstract class AbstractAddToClassAnnotationIntention(
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
-        val method = element.getParentOfType(PsiMethod::class.java) ?: return
+        val method = element.parentOfType<PsiMethod>() ?: return
         val psiFacade = JavaPsiFacade.getInstance(project)
         val factory = psiFacade.elementFactory
-        val annotation = factory.createAnnotationFromText("@${annotationClazz}(\"\")", null)
+        val annotation = factory.createAnnotationFromText("${annotationClazz.prependAtSign()}(\"\")", null)
         element.modifierListFromParentClass()?.add(annotation)
         project.shortenAndReformat(method)
     }

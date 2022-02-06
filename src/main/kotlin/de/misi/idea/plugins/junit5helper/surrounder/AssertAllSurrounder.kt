@@ -8,7 +8,7 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiCodeBlock
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiExpressionStatement
-import com.intellij.psi.util.PsiTreeUtil.getParentOfType
+import com.intellij.psi.util.parentOfType
 import de.misi.idea.plugins.junit5helper.shortenAndReformat
 
 class AssertAllSurrounder : Surrounder {
@@ -18,7 +18,7 @@ class AssertAllSurrounder : Surrounder {
 
     override fun surroundElements(project: Project, editor: Editor, elements: Array<out PsiElement>): TextRange? {
         val factory = JavaPsiFacade.getInstance(project).elementFactory
-        val statements = elements.mapNotNull { getParentOfType(it, PsiExpressionStatement::class.java, false) }
+        val statements = elements.mapNotNull { it.parentOfType<PsiExpressionStatement>(true) }
         if (statements.isNotEmpty()) {
             val topParent = statements[0].parent as PsiCodeBlock
             val innerText = parseSelectedText(statements)

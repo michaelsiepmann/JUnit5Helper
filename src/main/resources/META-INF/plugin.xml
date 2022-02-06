@@ -84,7 +84,7 @@ It has also some live-templates for
             <descriptionDirectoryName>ConvertCSVSourceToMethodSourceIntention</descriptionDirectoryName>
         </intentionAction>
         <defaultLiveTemplates file="/liveTemplates/JUnit5.xml"/>
-        <liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/>
+        <!--<liveTemplateContext implementation="de.misi.idea.plugins.junit5helper.livetemplates.JUnit5Context"/> -->
         <liveTemplateMacro implementation="de.misi.idea.plugins.junit5helper.livetemplates.CamelCaseMethodNameMacro"/>
         <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.StatementSurroundDescriptor"/>
         <lang.surroundDescriptor language="JAVA" implementationClass="de.misi.idea.plugins.junit5helper.surrounder.MethodSurroundDescriptor"/>

@@ -6,8 +6,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtilCore
+import com.intellij.psi.util.parentOfType
 import de.misi.idea.plugins.junit5helper.between
 import de.misi.idea.plugins.junit5helper.intentions.hasTestAnnotation
 
@@ -37,8 +37,8 @@ class StatementSurroundDescriptor : SurroundDescriptor {
 
     private fun elementAt(file: PsiFile, offset: Int): PsiStatement? {
         val result = file.viewProvider.findElementAt(offset, JavaLanguage.INSTANCE)
-        val statement = PsiTreeUtil.getParentOfType(result, PsiStatement::class.java, false) ?: return null
-        val method = PsiTreeUtil.getParentOfType(statement, PsiMethod::class.java) ?: return null
+        val statement = result?.parentOfType<PsiStatement>(true) ?: return null
+        val method = statement.parentOfType<PsiMethod>() ?: return null
         return if (method.modifierList.hasTestAnnotation()) {
             statement
         } else {

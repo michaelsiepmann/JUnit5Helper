@@ -6,8 +6,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElement.EMPTY_ARRAY
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtilCore
+import com.intellij.psi.util.parentOfType
 import de.misi.idea.plugins.junit5helper.between
 import de.misi.idea.plugins.junit5helper.intentions.hasTestAnnotation
 
@@ -40,6 +40,6 @@ class MethodSurroundDescriptor : SurroundDescriptor {
 
     private fun elementAt(file: PsiFile, offset: Int): PsiMethod? {
         val result = file.viewProvider.findElementAt(offset, JavaLanguage.INSTANCE)
-        return PsiTreeUtil.getParentOfType(result, PsiMethod::class.java, false)
+        return result?.parentOfType(true)
     }
 }
