@@ -44,7 +44,7 @@ private fun String.prependIfMissing(prefix: String) =
 internal fun PsiClass.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
     val psiAnnotation = factory.createAnnotationFromText(annotation.prependAtSign(), context)
     modifierList?.add(psiAnnotation)
-    JavaCodeStyleManager.getInstance(project).shortenClassReferences(context)
+    JavaCodeStyleManager.getInstance(project).shortenClassReferences(psiAnnotation)
 }
 
 internal fun PsiModifierList.addAnnotation(annotation: String, factory: PsiElementFactory, context: PsiElement) {
