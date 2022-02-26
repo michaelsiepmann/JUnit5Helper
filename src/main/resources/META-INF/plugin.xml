@@ -40,7 +40,7 @@ It has also some live-templates for
     <depends>com.intellij.modules.lang</depends>
     -->
 
-    <resource-bundle>de.misi.idea.plugins.resources.messages</resource-bundle>
+    <resource-bundle>messages.JUnit5Bundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <intentionAction>
