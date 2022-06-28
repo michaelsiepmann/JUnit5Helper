@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.7.0'
     repositories {
         mavenCentral()
     }
@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
-    id 'org.jetbrains.intellij' version '0.7.3'
+    id 'org.jetbrains.intellij' version '1.6.0'
     id 'java'
 }
 
@@ -21,14 +21,14 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 intellij {
-    version '2021.3.2'
-    plugins 'java'
-    updateSinceUntilBuild false
-    pluginName 'JUnit5Helper'
+    version = '2022.1'
+    plugins = [ 'java' ]
+    updateSinceUntilBuild = false
+    pluginName = 'JUnit5Helper'
 }
 
 group 'de.misi.idea.plugins.junit5helper'
-version '0.6'
+version '0.7'
 
 repositories {
     mavenCentral()
@@ -39,9 +39,16 @@ tasks.test {
 }
 
 dependencies {
-    implementation 'com.opencsv:opencsv:5.5.2'
+    implementation 'com.opencsv:opencsv:5.6'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.8.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
