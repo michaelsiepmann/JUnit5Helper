@@ -2,36 +2,35 @@ package de.misi.idea.plugins.junit5helper
 
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
+import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.dsl.builder.panel
 import javax.swing.JComponent
 
 class JUnit5Configurable(private val project: Project) : Configurable {
 
-    private var panel: JUnit5ConfigurationDialog? = null
+    private lateinit var addDisplayName: JBCheckBox
 
-    override fun createComponent(): JComponent = getPanel().rootPanel
+    override fun createComponent(): JComponent {
+        val bundle = JUnit5HelperBundle.INSTANCE
+        val configuration = JUnit5WorkspaceConfiguration.getInstance(project)
+        return panel {
+            row {
+                addDisplayName = checkBox(bundle.getMessage("configuration.addDisplayName"))
+                    .component
+                addDisplayName.isSelected = configuration.addDisplayName ?: false
+            }
+        }
+    }
 
     override fun isModified(): Boolean {
         val configuration = JUnit5WorkspaceConfiguration.getInstance(project)
-        val panelConfig = getPanel().configuration
-        return configuration.addDisplayName != panelConfig.addDisplayName
+        return configuration.addDisplayName != addDisplayName.isSelected
     }
 
     override fun apply() {
         val configuration = JUnit5WorkspaceConfiguration.getInstance(project)
-        val panelConfig = getPanel().configuration
-        configuration.addDisplayName = panelConfig.addDisplayName
+        configuration.addDisplayName = addDisplayName.isSelected
     }
 
     override fun getDisplayName() = "JUnit5 Helper"
-
-    private fun getPanel(): JUnit5ConfigurationDialog {
-        if (panel == null) {
-            val configuration = JUnit5WorkspaceConfiguration.getInstance(project)
-            panel = JUnit5ConfigurationDialog()
-            panel?.configuration = JUnit5Configuration(
-                configuration.addDisplayName ?: false
-            )
-        }
-        return panel!!
-    }
 }
